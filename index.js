@@ -5,6 +5,8 @@ import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import propiedadesRoutes from './routes/propiedadesRoutes.js';
+import appRoutes from './routes/appRoutes.js';
+import apiRoutes from './routes/apiRoutes.js';
 import BD from './config/db.js';
 
 
@@ -44,9 +46,13 @@ app.use( express.static('public') )
 
 
 //Routing
+app.use('/', appRoutes)
+
 app.use('/auth', usuarioRoutes);
 
 app.use('/', propiedadesRoutes)
+
+app.use('/api', apiRoutes)
 
 
 
