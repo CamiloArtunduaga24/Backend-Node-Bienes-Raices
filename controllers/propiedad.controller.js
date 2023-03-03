@@ -5,6 +5,18 @@ import { Precio, Categoria, Propiedad} from '../models/index.js'
 
 const admin = async (req, res) => {
 
+    //Leer Query string
+
+    const { pagina: paginaActual } = req.query
+
+    console.log('Aqui va el query string',paginaActual);
+
+    const expresionRegular = /[0-9]/
+
+    if(!expresionRegular.test(paginaActual)){
+        return res.redirect('/mis-propiedades?pagina=1')
+    }
+
     const { id } = req.usuario
 
     const propiedades = await Propiedad.findAll({
@@ -325,8 +337,26 @@ const eliminarPropiedad = async (req, res) => {
 
 //Muestra una propiedad
 const mostrarPropiedad = async(req, res) => {
-    res.render('propiedades/mostrar',
-    )
+    const { id } = req.params
+
+    //Comprobar que la propiedad exista
+    const propiedad = await Propiedad.findByPk(id, {
+        include: [
+            { model: Precio, as: 'precio' },
+            { model: Categoria, as: 'categoria' }
+        ]
+    })
+
+    // if(!propiedad) {
+    //     return res.redirect('/404')
+    // }
+
+    res.render('propiedades/mostrar',{
+        propiedad,
+        pagina: propiedad.titulo,
+        
+    })
+
 }
 
 export {
