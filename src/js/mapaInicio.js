@@ -25,12 +25,12 @@
 
     //Filtrado de categorias y precios
     categoriasSelect.addEventListener('change', e => {
-        filtros.categoria = e.target.value
+        filtros.categoria = +e.target.value
         filtrarPropiedades();
     })
 
     preciosSelect.addEventListener('change', e => {
-        filtros.precio = e.target.value
+        filtros.precio = +e.target.value
         filtrarPropiedades();
 
     })
@@ -52,6 +52,11 @@
 
     
     const mostrarPropiedades = propiedades => {
+
+        //Limpiar los Market previos
+        markers.clearLayers()
+
+
         propiedades.forEach(propiedad => {
             //console.log(propiedad);
             //Agregar Pines
@@ -72,15 +77,21 @@
     }
 
     const filtrarPropiedades = () => {
-        const resultado = propiedades.filter( filtrarCategoria )
+         const resultado = propiedades.filter( filtrarCategoria ).filter(filtrarPrecio)
 
-        console.log(resultado);
+         mostrarPropiedades(resultado)
         
     }
 
-    const filtrarCategoria = (propiedad) => {
-        return filtros.categoria ? propiedad.categoriaId === filtros.categoria : propiedad
-    }
+    const filtrarCategoria = propiedad => 
+        filtros.categoria ? propiedad.categoriaId === filtros.categoria : propiedad
+    
+    const filtrarPrecio = (propiedad) => 
+        filtros.precio ? propiedad.precioId === filtros.precio : propiedad
+       
+    
+        
+    
 
     obtenerPropiedades()
 })()
