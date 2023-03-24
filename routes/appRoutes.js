@@ -22,6 +22,7 @@ router.get('/categorias/:id', categoria)
 
 
 
+
 //Buscador
 router.post('/buscador', buscador)
 
