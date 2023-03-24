@@ -8,10 +8,11 @@ import { admin,
         editarPropiedad,
         guardarCambios,
         eliminarPropiedad,
-        mostrarPropiedad
+        mostrarPropiedad,
         } from "../controllers/propiedad.controller.js";
 import protegerRuta from "../middleware/protegerRuta.js";
 import upload from "../middleware/subirImagen.js";
+import identificarUsuario from "../middleware/identificarUsuario.js";
 
 const router = express.Router();
 
@@ -73,6 +74,7 @@ router.post('/propiedades/crear',
 
 //Area publica
  router.get('/propiedad/:id',
-        mostrarPropiedad)
+       identificarUsuario,
+       mostrarPropiedad)
 
 export default router

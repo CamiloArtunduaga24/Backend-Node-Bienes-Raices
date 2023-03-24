@@ -21,8 +21,6 @@ const protegerRuta = async (req, res, next) => {
 
         const usuario = await Usuario.scope('eliminarPassword').findByPk(decoded.id) 
 
-        console.log('El puto usuario',usuario);
-
         //Almacenar el usaurio al request
         if(usuario) {
             
