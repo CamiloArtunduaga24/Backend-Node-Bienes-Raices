@@ -1,7 +1,7 @@
 import { unlink } from 'node:fs/promises'
 import { validationResult } from 'express-validator'
-import { Precio, Categoria, Propiedad, Mensaje} from '../models/index.js'
-import { esVendedor } from '../helpers/index.js'
+import { Precio, Categoria, Propiedad, Mensaje, Usuario} from '../models/index.js'
+import { esVendedor, formatearFecha } from '../helpers/index.js'
 
 
 const admin = async (req, res) => {
@@ -32,7 +32,8 @@ const admin = async (req, res) => {
                 },
                 include: [
                     { model: Categoria, as: 'categoria' },
-                    { model: Precio, as: 'precio' }
+                    { model: Precio, as: 'precio' },
+                    { model: Mensaje, as: 'mensajes' }
                 ]
             }),
             Propiedad.count({
@@ -443,6 +444,43 @@ const enviarMensaje = async (req, res ) => {
 
 }
 
+
+//Leer mensaje recibidos
+
+    const verMensaje = async (req, res) => {
+
+        const {id} = req.params
+
+        //Validar que la propiedad exista
+        const propiedad = await Propiedad.findByPk(id, {
+            include: [
+                { model: Mensaje, as: 'mensajes', 
+                  include: [{
+                    model: Usuario.scope('eliminarPassword'), as: 'usuario'
+                  }]
+                }
+            ]
+        })
+    
+        if(!propiedad) {
+            return res.redirect('/mis-propiedades')
+        }
+    
+        //Revisar que quien visita la URL, es quien creo la propiedad
+    
+        if(propiedad.usuarioId.toString() !== req.usuario.id.toString()) {
+            return res.redirect('/mis-propiedades')
+    
+        }
+
+        res.render('propiedades/mensajes', {
+            pagina: 'Mensajes',
+            mensajes: propiedad.mensajes,
+            formatearFecha
+
+        })
+    }
+
 export {
     admin, 
     crear,
@@ -453,5 +491,6 @@ export {
     guardarCambios,
     eliminarPropiedad,
     mostrarPropiedad,
-    enviarMensaje
+    enviarMensaje,
+    verMensaje
 }
