@@ -8,6 +8,7 @@ import { admin,
         editarPropiedad,
         guardarCambios,
         eliminarPropiedad,
+        cambiarEstado,
         mostrarPropiedad,
         enviarMensaje,
         verMensaje
@@ -72,6 +73,11 @@ router.post('/propiedades/crear',
         protegerRuta,
         eliminarPropiedad
         )
+
+ router.put('/propiedades/:id',
+        protegerRuta,
+        cambiarEstado
+       )
 
 
 //Area publica
